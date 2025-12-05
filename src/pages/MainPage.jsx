@@ -30,9 +30,10 @@ export default function MainPage() {
 
         fetchBooks();
     }, []);
-    //한페이지에 보여줄수 있는 아이템 개수
     if (loading) return <div>로딩중...</div>;
     if (error) return <div>오류가 발생했습니다.</div>;
+    //한페이지에 보여줄수 있는 아이템 개수
+
 
     const itemsPerPage = 3;
 
@@ -79,6 +80,11 @@ export default function MainPage() {
                     </span>
                 ))}
             </div>
+            {/* 테스트용 나중에 지우기 */}
+            <button onClick={() => navigate("/detail/999")}>
+                상세보기 테스트
+            </button>
+
         </div>
     );
 }
