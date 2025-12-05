@@ -76,7 +76,6 @@ export default function NewBookPage() {
             취소
           </button>
 
-
           <button className="submit-btn"
                   onClick={submitbook}>
             등록
