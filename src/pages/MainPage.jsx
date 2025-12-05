@@ -1,17 +1,18 @@
 import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import "../styles/MainPage.css";
+import axios from "axios";
 
 export default function MainPage() {
 
   const navigate = useNavigate();
 
-  const items = [
-    {id: 1, title: "제목 1", img: null},
-    {id: 2, title: "제목 2", img: null},
-    {id: 3, title: "제목 3", img: null}
-  ];
-
+    const getItems = async(idx,limit) =>{
+        const items = await axios.get('/api/books',{params:{limit:limit,pageIdx:idx}})
+        console.log(items);
+        return items;
+    }
+    const items = getItems();
   //한페이지에 보여줄수 있는 아이템 개수
   const itemsPerPage = 3;
 
