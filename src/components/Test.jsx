@@ -17,7 +17,7 @@ const App = () => {
   useEffect(() => {
     // 백엔드 서버의 /api/hello 엔드포인트에 GET 요청을 보냅니다.
     // 이 요청이 성공하면 CORS 설정 및 기본 통신 환경이 구축된 것입니다.
-    axios.get(`${API_BASE_URL}/hello`)
+    axios.get(`${API_BASE_URL}/api/hello`)
     .then(response => {
       const message = `✅ 통신 성공: 백엔드에서 응답을 받았습니다. 응답 메시지: "${response.data}"`;
       setTestResult(message);

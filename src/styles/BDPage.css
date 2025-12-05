@@ -1,0 +1,102 @@
+/* 전체 감싸는 박스 */
+.detail-wrapper {
+    width: 1100px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+/* 상단 제목칸 */
+.detail-header {
+    background: #0b5f82;
+    color: white;
+    padding: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+/* 콘텐츠 전체 박스 */
+.detail-box {
+    border: 3px solid #0b5f82;
+    padding: 20px;
+    display: flex;
+    gap: 40px;
+    min-height: 300px;
+}
+
+/* 왼쪽 이미지 박스 */
+.detail-left {
+    width: 220px;
+    height: 260px;
+    background: #0b5f82;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+}
+
+/* 오른쪽 텍스트 영역 */
+.detail-right {
+    flex: 1;
+}
+
+.detail-right h3 {
+    font-size: 22px;
+    margin: 0;
+}
+
+/* 제목 밑 라인 */
+.detail-title-line {
+    border-bottom: 2px dashed #555;
+    padding: 10px 0;
+    font-size: 20px;
+}
+
+/* 내용 박스 */
+.detail-content-box {
+    margin-top: 10px;
+    font-size: 20px;
+}
+
+/* 버튼 영역 */
+.detail-btn-area {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+}
+
+/* 버튼 공통 스타일 */
+.detail-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 2px solid #0b5f82;
+    cursor: pointer;
+}
+
+/* 수정 버튼 */
+.detail-btn.edit {
+    background: #0b5f82;
+    color: white;
+}
+
+/* 삭제 버튼 */
+.detail-btn.delete {
+    background: white;
+    color: #0b5f82;
+}
+
+.detail-info-footer {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 30px;
+    font-size: 16px;
+    color: #333;
+    font-weight: 500;
+}
