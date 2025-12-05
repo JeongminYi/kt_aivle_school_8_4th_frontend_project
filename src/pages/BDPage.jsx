@@ -1,35 +1,45 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "../styles/BDPage.css";
+import axios from "axios";
 
 export default function BDPage() {
     const navigate = useNavigate();
     const { id } = useParams();
     const [item, setItem] = useState(undefined);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    // 날짜 포맷 변환 함수
+    const formatDate = (dateString) => {
+        if (!dateString) return "정보 없음";
+        // "2025-12-05T17:03:53.750913" → "2025-12-05 17:03:53"
+        return dateString.split('.')[0].replace('T', ' ');
+    };
 
     useEffect(() => {
-        const saved = JSON.parse(localStorage.getItem("items")) || [];
-        const found = saved.find((i) => i.id === Number(id));
-//      실전투입
-//      if (!found) {
-//          alert("해당 작품을 찾을 수 없습니다.");
-//          navigate("/");
-//          return;
-//         }
-//      테스트
-        if (!found) {
-            setItem(null);
-            return;
-        }
+        const fetchBookDetail = async () => {
+            try {
+                setLoading(true);
+                const response = await axios.get(`http://localhost:8080/api/books/${id}`);
+                setItem(response.data);
+            } catch (err) {
+                console.error(err);
+                setError(err);
+                setItem(null);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-        setItem(found);
+        fetchBookDetail();
     }, [id]);
 
     // 로딩 상태
-    if (item === undefined) return <div>로딩중...</div>;
+    if (loading) return <div>로딩중...</div>;
 
-    // 테스트 모드 (item 없음)
-    if (item === null) {
+    // 에러 또는 데이터 없음
+    if (error || item === null) {
         return (
             <div className="detail-wrapper">
                 <div className="detail-header">상세 페이지</div>
@@ -49,17 +59,11 @@ export default function BDPage() {
                         </div>
                     </div>
                 </div>
-                {/* 등록일 / 수정일 표시 영역 */}
-                {/*<div className="detail-info-footer">*/}
-                {/*    <div>등록일: {item.createdAt || "정보 없음"}</div>*/}
-                {/*    <div>수정일: {item.updatedAt || "정보 없음"}</div>*/}
-                {/*</div>*/}
+
                 <div className="detail-info-footer">
                     <div>등록일: 정보 없음</div>
                     <div>수정일: 정보 없음</div>
                 </div>
-
-
 
                 <div className="detail-btn-area">
                     <button className="detail-btn edit" disabled>수정</button>
@@ -71,15 +75,17 @@ export default function BDPage() {
     }
 
     // 정상 데이터 표시
-    const handleDelete = () => {
+    const handleDelete = async () => {
         if (!window.confirm("정말 삭제하시겠습니까?")) return;
 
-        const saved = JSON.parse(localStorage.getItem("items")) || [];
-        const updated = saved.filter((i) => i.id !== Number(id));
-        localStorage.setItem("items", JSON.stringify(updated));
-
-        alert("삭제되었습니다.");
-        navigate("/");
+        try {
+            await axios.delete(`http://localhost:8080/api/books/${id}`);
+            alert("삭제되었습니다.");
+            navigate("/");
+        } catch (err) {
+            console.error(err);
+            alert("삭제 중 오류가 발생했습니다.");
+        }
     };
 
     return (
@@ -88,8 +94,8 @@ export default function BDPage() {
 
             <div className="detail-box">
                 <div className="detail-left">
-                    {item.img ? (
-                        <img src={item.img} alt="작품 이미지" />
+                    {item.coverImageUrl ? (
+                        <img src={item.coverImageUrl} alt="작품 이미지" />
                     ) : (
                         "작품이미지"
                     )}
@@ -100,16 +106,24 @@ export default function BDPage() {
                     <div className="detail-title-line">{item.title}</div>
 
                     <h3 style={{ marginTop: "20px" }}>내용</h3>
-                    <div className="detail-content-box">{item.content}</div>
+                    <div className="detail-content-box">{item.description || item.content}</div>
                 </div>
             </div>
 
+            <div className="detail-info-footer">
+                <div>등록일: {formatDate(item.createdAt)}</div>
+                <div>수정일: {formatDate(item.updatedAt)}</div>
+            </div>
+
             <div className="detail-btn-area">
-                <button className="detail-btn edit" onClick={() => navigate(`/edit/${item.id}`)}>
+                <button className="detail-btn edit" onClick={() => navigate(`/edit/${item.bookId}`)}>
                     수정
                 </button>
                 <button className="detail-btn delete" onClick={handleDelete}>
                     삭제
+                </button>
+                <button className="detail-btn" onClick={() => navigate("/")}>
+                    목록
                 </button>
             </div>
         </div>
