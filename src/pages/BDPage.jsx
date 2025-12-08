@@ -5,7 +5,7 @@ import axios from "axios";
 
 export default function BDPage() {
     const navigate = useNavigate();
-    const { id } = useParams();
+    const {id} = useParams();
     const [item, setItem] = useState(undefined);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -53,7 +53,7 @@ export default function BDPage() {
                         <h3>제목</h3>
                         <div className="detail-title-line"></div>
 
-                        <h3 style={{ marginTop: "20px" }}>내용</h3>
+                        <h3 style={{marginTop: "20px"}}>내용</h3>
                         <div className="detail-content-box">
                             도서 설명이 들어가는 영역입니다.
                         </div>
@@ -95,7 +95,7 @@ export default function BDPage() {
             <div className="detail-box">
                 <div className="detail-left">
                     {item.coverImageUrl ? (
-                        <img src={item.coverImageUrl} alt="작품 이미지" className = "detail-img"/>
+                        <img src={item.coverImageUrl} alt="작품 이미지" className="detail-img"/>
                     ) : (
                         "작품이미지"
                     )}
@@ -105,23 +105,32 @@ export default function BDPage() {
                     <h3>제목</h3>
                     <div className="detail-title-line">{item.title}</div>
 
-                    <h3 style={{ marginTop: "20px" }}>내용</h3>
-                    <div className="detail-content-box">{item.description || item.content}</div>
+                    <h3 style={{marginTop: "20px"}}>내용</h3>
+                    <div className="detail-content-box">
+                        {item.description || item.content}
+                    </div>
                 </div>
             </div>
 
+            {/* 등록일 / 수정일 */}
             <div className="detail-info-footer">
                 <div>등록일: {formatDate(item.createdAt)}</div>
                 <div>수정일: {formatDate(item.updatedAt)}</div>
             </div>
 
+            {/* 버튼 영역 */}
             <div className="detail-btn-area">
-                <button className="detail-btn edit" onClick={() => navigate(`/edit/${item.bookId}`)}>
+                <button
+                    className="detail-btn edit"
+                    onClick={() => navigate(`/edit/${item.id || item.bookId}`)}
+                >
                     수정
                 </button>
+
                 <button className="detail-btn delete" onClick={handleDelete}>
                     삭제
                 </button>
+
                 <button className="detail-btn" onClick={() => navigate("/")}>
                     목록
                 </button>
