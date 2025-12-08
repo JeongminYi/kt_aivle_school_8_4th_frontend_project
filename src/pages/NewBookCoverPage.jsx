@@ -20,7 +20,6 @@ import {
   PaletteOutlined,
   Refresh as RefreshIcon
 } from '@mui/icons-material';
-
 // MUI에서 사용할 커스텀 스타일 및 색상 정의
 const customColors = {
   primaryPurple: '#6D28D9', // 메인 액션 색상 (보라)

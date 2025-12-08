@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import {useNavigate} from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/NewBookPage.css";
 import axios from "axios"; // 🔹 axios import 추가
 
@@ -28,23 +28,26 @@ export default function NewBookPage() {
         };
 
         try {
-            // 3. axios.post로 서버에 전송
-            const response = await axios.post(
-                "http://localhost:8080/api/books", // 🔹 백엔드 엔드포인트
-                JSON.stringify(requestBody),
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
-
-            console.log(response);
+            // // 3. axios.post로 서버에 전송
+            // const response = await axios.post(
+            //     "http://localhost:8080/api/books", // 🔹 백엔드 엔드포인트
+            //     requestBody
+            // );
+            //
+            // // 필요하면 response.data로 저장된 책 정보 확인 가능
+            // console.log("서버에서 돌아온 데이터:", response.data);
+            const response = await fetch("http://localhost:8080/api/books",{
+                method:"POST",
+                headers:{"Content-Type":"application/json"},
+                body: JSON.stringify(requestBody)
+            });
+            const data = await response.json();
+            console.log(data);
             alert("등록 완료!");
 
             // 4. 메인 페이지로 이동
-            navigate("/");
-
+           // navigate(`/detail/${data.bookId}/updateCover`);
+            navigate("/")
         } catch (error) {
             console.error("등록 중 오류:", error);
             alert("등록 중 오류가 발생했습니다.");
