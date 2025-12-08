@@ -224,9 +224,9 @@ export default function NewBookPageMUI() {
                     </Grid>
 
                     {/* Right: Inputs */}
-                    <Grid item xs={12} md={9}>
+                    <Grid item xs={12} md={9} sx={{width:'75%'}}>
                         <Stack spacing={2}>
-                            <Box sx={{ width: "100%", maxWidth: "780px" }}>
+                            <Box sx={{ width: "100%" }}>
                                 <Typography variant="subtitle1" sx={{ fontWeight: "bold", mb: 1 }}>
                                     도서 제목
                                 </Typography>

@@ -39,7 +39,11 @@
     justify-content: center;
     text-align: center;
 }
-
+.image-button{
+    width: 50px;
+    background: #0b5f82;
+    color: white;
+}
 .input-area {
     flex: 1;
 }
@@ -59,4 +63,22 @@
     display: flex;
     justify-content: flex-end;
     gap: 15px;
+}
+
+.cancel-btn,
+.submit-btn {
+    padding: 10px 25px;
+    font-size: 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.cancel-btn {
+    background: #ccc;
+}
+
+.submit-btn {
+    background: #0b5f82;
+    color: white;
 }
