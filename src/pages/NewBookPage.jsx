@@ -58,55 +58,35 @@ export default function NewBookPageMUI() {
 
 
     const submitbook = async () => {
-        if (title.trim() === "") {
-            setMessageSeverity("warning");
-            setMessage("제목을 입력해주세요.");
-            return;
-        }
 
-        setIsLoading(true);
-        setMessage(null);
+        const userId = localStorage.getItem("userId");   // 🔥 로그인한 유저 ID 가져오기
 
         const requestBody = {
-            title: title.trim(),
+            title: title,
             content: content,
-            coverImageUrl: coverPreview
-            // cover: coverPreview // 필요하면 포함
+            userId: Number(userId)   // 🔥 반드시 추가
         };
 
         try {
-            console.log(coverPreview)
-
             const response = await fetch("http://localhost:8080/api/books", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(requestBody)
             });
 
-            if (!response.ok) {
-                const text = await response.text();
-                throw new Error(`HTTP ${response.status} - ${text}`);
-            }
-
             const data = await response.json();
-            setMessageSeverity("success");
-            setMessage("등록 완료!");
             console.log(data);
-            // navigate to update cover page as previously
-            //navigate(`/detail/${data.bookId}/updateCover`);
-            if(data.coverImageUrl == null) {
-                navigate(`/detail/${data.bookId}/updateCover`);
-            }else{
-                navigate(`/`);
-            }
-        } catch (err) {
-            console.error("등록 중 오류:", err);
-            setMessageSeverity("error");
-            setMessage("등록 중 오류가 발생했습니다.");
-        } finally {
-            setIsLoading(false);
+
+            alert("등록 완료!");
+
+            navigate(`/detail/${data.id}/updateCover`);
+
+        } catch (error) {
+            console.error("등록 중 오류:", error);
+            alert("등록 중 오류가 발생했습니다.");
         }
     };
+
 
     return (
         <Container

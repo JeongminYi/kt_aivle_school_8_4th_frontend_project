@@ -16,13 +16,13 @@ export default function MainPage() {
             try {
                 setLoading(true);
 
-                // 1) 백엔드 데이터
-                const response = await axios.get("http://localhost:8080/api/books");
-                const serverItems = response.data;
+                const userId = localStorage.getItem("userId");   // 🔹 로그인된 유저 ID 가져오기
 
-                // 2) localStorage 데이터
+                const response = await axios.get(
+                    `http://localhost:8080/api/books?userId=${userId}`
+                );
 
-                setItems(serverItems);
+                setItems(response.data);
 
             } catch (err) {
                 console.error(err);
@@ -84,7 +84,7 @@ export default function MainPage() {
                         <div className="title">{item.title}</div>
                     </div>
                         ))
-                )}
+                )}`
             </div>
 
             {/* 페이지네이션 */}
