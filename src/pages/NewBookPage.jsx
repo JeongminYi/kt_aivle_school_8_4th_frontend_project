@@ -1,109 +1,221 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../styles/NewBookPage.css";
-import axios from "axios"; // 🔹 axios import 추가
+import {
+    Alert,
+    Box,
+    Button,
+    CircularProgress,
+    Container,
+    Grid,
+    Paper,
+    TextField,
+    Typography,
+    Stack
+} from "@mui/material";
+import { BookOutlined, Refresh as RefreshIcon } from "@mui/icons-material";
 
-export default function NewBookPage() {
+const customColors = {
+    primaryPurple: "#6D28D9",
+    secondaryPurple: "#5B21B6",
+    infoIndigo: "#4F46E5",
+    bannerBlue: "#0b5f82",
+    backgroundLight: "#F9FAFB"
+};
 
-    const navigate = useNavigate(); // 취소 시 메인으로 이동
+export default function NewBookPageMUI() {
+    const navigate = useNavigate();
 
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
 
-    // 🔹 등록 버튼 클릭 시 수행할 함수
+    const [isLoading, setIsLoading] = useState(false);
+    const [message, setMessage] = useState(null);
+    const [messageSeverity, setMessageSeverity] = useState("info");
+
     const submitbook = async () => {
-        // 1. 제목 유효성 검사
         if (title.trim() === "") {
-            alert("제목 입력");
+            setMessageSeverity("warning");
+            setMessage("제목을 입력해주세요.");
             return;
         }
 
-        // 2. 백엔드로 보낼 데이터 (DTO 느낌)
-        //    👉 백엔드에서 사용하는 필드명에 맞춰야 함!
-        const requestBody = {
-            title: title,
-            content: content,
-            // 예시: 백엔드에서 coverImageUrl 같은 필드를 쓴다면
-            // coverImageUrl: null
-        };
+        setIsLoading(true);
+        setMessage(null);
+
+        const requestBody = { title: title.trim(), content };
 
         try {
-            // // 3. axios.post로 서버에 전송
-            // const response = await axios.post(
-            //     "http://localhost:8080/api/books", // 🔹 백엔드 엔드포인트
-            //     requestBody
-            // );
-            //
-            // // 필요하면 response.data로 저장된 책 정보 확인 가능
-            // console.log("서버에서 돌아온 데이터:", response.data);
-            const response = await fetch("http://localhost:8080/api/books",{
-                method:"POST",
-                headers:{"Content-Type":"application/json"},
-                body: JSON.stringify(requestBody)
+            const response = await fetch("http://localhost:8080/api/books", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(requestBody),
             });
-            const data = await response.json();
-            console.log(data);
-            alert("등록 완료!");
 
-            // 4. 메인 페이지로 이동
-           // navigate(`/detail/${data.bookId}/updateCover`);
-            navigate("/")
+            if (!response.ok) {
+                const text = await response.text();
+                throw new Error(`HTTP ${response.status} - ${text}`);
+            }
+
+            const data = await response.json();
+            setMessageSeverity("success");
+            setMessage("등록 완료!");
+            // navigate to update cover page as in your original code
+            navigate(`/detail/${data.bookId}/updateCover`);
         } catch (error) {
             console.error("등록 중 오류:", error);
-            alert("등록 중 오류가 발생했습니다.");
+            setMessageSeverity("error");
+            setMessage("등록 중 오류가 발생했습니다.");
+        } finally {
+            setIsLoading(false);
         }
     };
 
     return (
-        <div className="register-container">
-            {/* 상단 배너 */}
-            <div className="register-banner">
-                <h2>신규 도서 등록</h2>
-                <p>새로운 도서 정보 입력</p>
-            </div>
+        <Container
+            maxWidth={false}
+            sx={{
+                width: "1500px",
+                mx: "auto",
+                py: 3,
+            }}
+        >
+            {/* Banner */}
+            <Paper
+                elevation={3}
+                sx={{
+                    bgcolor: "#0b5f82",
+                    color: "common.white",
+                    px:4,
+                    py: 2,
+                    borderRadius: 1,
+                    mb: 3,
+                }}
+            >
+                <Stack spacing={0.2}>
+                    <Typography variant="h5" component="h2">
+                        신규 도서 등록
+                    </Typography>
+                    <Typography variant="body2">새로운 도서 정보 입력</Typography>
+                </Stack>
+            </Paper>
 
-            {/* 본문 */}
-            <div className="register-box">
-                {/* 이미지 업로드 영역 (나중에 파일 업로드 붙일 자리) */}
-                <div className="image-area">
-                    작품이미지
-                </div>
+            {/* Message alert */}
+            {message && (
+                <Alert
+                    severity={messageSeverity}
+                    sx={{
+                        mb: 2,
+                        borderLeft: `4px solid ${
+                            messageSeverity === "info"
+                                ? customColors.infoIndigo
+                                : messageSeverity === "warning"
+                                    ? "#ff9800"
+                                    : messageSeverity === "success"
+                                        ? "#4CAF50"
+                                        : "#F44336"
+                        }`,
+                        backgroundColor: customColors.backgroundLight,
+                    }}
+                >
+                    {message}
+                </Alert>
+            )}
 
-                {/* 입력 영역 */}
-                <div className="input-area">
-                    <label className="label">도서 제목</label>
-                    <input
-                        type="text"
-                        className="input-title"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                    />
+            {/* Main box */}
+            <Paper
+                elevation={4}
+                sx={{
+                    border: "2px solid #0b5f82",
+                    p: { xs: 2, md: 4 },
+                    mb: 3,
+                }}
+            >
+                <Grid container spacing={10}>
+                    {/* Left image area */}
+                    <Grid item xs={12} md={3}>
+                        <Box
+                            sx={{
+                                width: "100%",
+                                aspectRatio: "1.5 / 2",
+                                minHeight: 250,
+                                bgcolor: "#0b5f82",
+                                color: "white",
+                                borderRadius: 1,
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                fontSize: 18,
+                                px: 1,
+                            }}
+                        >
+                            작품이미지
+                        </Box>
+                    </Grid>
 
-                    <label className="label">도서 설명</label>
-                    <textarea
-                        className="input-content"
-                        value={content}
-                        onChange={(e) => setContent(e.target.value)}
-                    />
-                </div>
-            </div>
+                    {/* Right input area */}
+                    <Grid item xs={12} md={9} sx={{width:'70%'}}>
+                        <Stack spacing={3}>
+                            <Box>
+                                <Typography variant="subtitle1" sx={{ fontWeight: "bold", mb: 1 }}>
+                                    도서 제목
+                                </Typography>
+                                <TextField
+                                    fullWidth
+                                    placeholder="도서 제목을 입력하세요"
+                                    value={title}
+                                    onChange={(e) => setTitle(e.target.value)}
+                                    size="medium"
+                                />
+                            </Box>
 
-            {/* 하단 버튼 */}
-            <div className="btn-area">
-                <button
-                    className="cancel-btn"
+                            <Box>
+                                <Typography variant="subtitle1" sx={{ fontWeight: "bold", mb: 1 }}>
+                                    도서 설명
+                                </Typography>
+                                <TextField
+                                    fullWidth
+                                    multiline
+                                    rows={6}
+                                    placeholder="도서 설명을 입력하세요"
+                                    value={content}
+                                    onChange={(e) => setContent(e.target.value)}
+                                />
+                            </Box>
+                        </Stack>
+                    </Grid>
+                </Grid>
+            </Paper>
+
+            {/* Buttons */}
+            <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2 }}>
+                <Button
+                    variant="outlined"
                     onClick={() => navigate("/")}
+                    sx={{
+                        bgcolor: "#f5f5f5",
+                        borderColor: "#d0d0d0",
+                        color: "#333",
+                        textTransform: "none",
+                    }}
                 >
                     취소
-                </button>
+                </Button>
 
-                <button
-                    className="submit-btn"
-                    onClick={submitbook} // 🔹 axios.post 호출하는 함수 연결
+                <Button
+                    variant="contained"
+                    onClick={submitbook}
+                    disabled={isLoading}
+                    startIcon={isLoading ? <CircularProgress size={18} color="inherit" /> : <RefreshIcon />}
+                    sx={{
+                        bgcolor: "#0b5f82",
+                        "&:hover": { bgcolor: "#064f6a" },
+                        color: "white",
+                        textTransform: "none",
+                    }}
                 >
-                    등록
-                </button>
-            </div>
-        </div>
+                    {isLoading ? "등록 중..." : "등록"}
+                </Button>
+            </Box>
+        </Container>
     );
 }
