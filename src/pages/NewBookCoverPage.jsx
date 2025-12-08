@@ -169,7 +169,7 @@ const NewBookCoverPage = () => {
                 </Typography>
 
                 {/* 메인 레이아웃: Grid 분할 (columns={12} 제거, item 속성 복원) */}
-                <Grid container spacing={{xs: 4, sm: 6, lg: 8}}>
+                <Grid container spacing={{xs: 4, sm: 6, lg: 8}} alignItems={"flex-start"}>
 
                     {/* --- 좌측 컬럼: 도서 정보 미리보기 (sm=5/12 ≈ 41.6%) --- */}
                     {/* item 속성 복원 및 xs/sm 속성 사용 */}
