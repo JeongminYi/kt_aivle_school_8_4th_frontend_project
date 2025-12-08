@@ -94,7 +94,8 @@ export default function NewBookPageMUI() {
             // navigate to update cover page as previously
             //navigate(`/detail/${data.bookId}/updateCover`);
             if(data.coverImageUrl == null) {
-                navigate(`/detail/${data.bookId}/updateCover`);
+                navigate(`/detail/${data.bookId}/updateCover`,{state:{id: data.bookId ,title:title, content:content, image:coverPreview}});
+
             }else{
                 navigate(`/`);
             }

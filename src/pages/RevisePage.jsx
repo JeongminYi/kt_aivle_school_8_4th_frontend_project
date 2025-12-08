@@ -197,7 +197,7 @@ export default function RevisePage() {
                     </Button>
                     <Button
                         variant="contained"
-                        onClick = {() =>  navigate(`/detail/${id}/updateCover`,{state:{id: id , content:content}})}
+                        onClick = {() =>  navigate(`/detail/${id}/updateCover`,{state:{id: id ,title:title, content:content,image:ImageURL}})}
                         sx={{
                             marginLeft:4,
                             mt: 3,

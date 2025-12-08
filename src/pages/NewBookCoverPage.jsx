@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import {useParams, useLocation, useNavigate} from 'react-router-dom';
 import {
     Alert,
     Box,
@@ -33,7 +33,6 @@ const dalleOptions = [
     { value: 'dall-e-3', label: 'DALL-E 3 (최신)' },
     { value: 'dall-e-2', label: 'DALL-E 2' },
 ];
-
 const SelectInput = ({ options, label, value, onChange }) => (
     <FormControl fullWidth size="small" sx={{ minWidth: 150 }}>
         <InputLabel id={`select-label-${label}`}>{label}</InputLabel>
@@ -60,8 +59,21 @@ const SelectInput = ({ options, label, value, onChange }) => (
 const NewBookCoverPage = () => {
     const params = useParams(); // handle either :id or :bookId
     const location = useLocation();
-
+    const {state} = useLocation();
+    const navigate = useNavigate();
     // Try multiple sources for id: route param named 'bookId' or 'id', or location.state.id
+    const prompt_base = `상황: \n구도:`;
+    const [apiKey, setApiKey] = useState('');
+    const [selectedDalleVersion, setSelectedDalleVersion] = useState(dalleOptions[0].value);
+    const [prompt, setPrompt] = useState(prompt_base);
+    const [isLoading, setIsLoading] = useState(false);
+    const [message, setMessage] = useState(null);
+    const [messageSeverity, setMessageSeverity] = useState('info');
+    const [generatedImageUrl, setGeneratedImageUrl] = useState(state.image ,null);
+    const [isRegistering, setIsRegistering] = useState(false);
+
+
+
     const resolvedBookId = useMemo(() => {
         const fromParams = params.bookId ?? params.id ?? null;
         const fromState = location?.state?.id ?? null;
@@ -75,24 +87,13 @@ const NewBookCoverPage = () => {
     }, [resolvedBookId]);
 
     const MOCK_COVER_URL = 'https://placehold.co/300x450/4F46E5/F9FAFB?text=Current+Book+Cover';
-
     // basic/default bookData to avoid undefined fields in UI
     const bookData = {
-        bookId: numericBookId,
-        title: '제목 없음',
-        content: '이 책의 주요 내용은 인공지능이 인간의 창작 활동에 미치는 영향과 미래의 협업 방식에 대한 심층적인 분석입니다. 배경은 푸른색 계열로 해주세요.',
-        createdAt: '-',
-        updatedAt: '-',
+        bookId: state.id,
+        title: state.title,
+        content: state.content,
+        image: generatedImageUrl,
     };
-
-    const [apiKey, setApiKey] = useState('');
-    const [selectedDalleVersion, setSelectedDalleVersion] = useState(dalleOptions[0].value);
-    const [prompt, setPrompt] = useState(bookData.content);
-    const [isLoading, setIsLoading] = useState(false);
-    const [message, setMessage] = useState(null);
-    const [messageSeverity, setMessageSeverity] = useState('info');
-    const [generatedImageUrl, setGeneratedImageUrl] = useState(null);
-    const [isRegistering, setIsRegistering] = useState(false);
 
     const handleRegenerateCover = async () => {
         setMessage(null);
@@ -120,7 +121,7 @@ const NewBookCoverPage = () => {
                 },
                 body: JSON.stringify({
                     model: selectedDalleVersion,
-                    prompt,
+                    prompt:prompt,
                     size: selectedDalleVersion === 'dall-e-3' ? '1024x1792' : '512x512',
                     quality: selectedDalleVersion === 'dall-e-3' ? 'standard' : undefined,
                     n: 1,
@@ -135,7 +136,7 @@ const NewBookCoverPage = () => {
             const data = await response.json();
             const imageUrl = data?.data?.[0]?.url;
             if (!imageUrl) throw new Error('이미지 URL을 받지 못했습니다.');
-
+            bookData.image = imageUrl;
             setGeneratedImageUrl(imageUrl);
             setMessageSeverity('success');
             setMessage('🎉 AI 표지 생성 완료');
@@ -175,6 +176,8 @@ const NewBookCoverPage = () => {
             await response.json();
             setMessageSeverity('success');
             setMessage('✅ 표지 이미지가 성공적으로 등록되었습니다!');
+            navigate(`/`);
+
         } catch (err) {
             console.error(err);
             setMessageSeverity('error');
@@ -200,9 +203,40 @@ const NewBookCoverPage = () => {
                     </Alert>
                 )}
 
-                <Typography variant="h4" component="h1" gutterBottom sx={{ color: 'text.primary', fontWeight: 'extrabold', borderBottom: `2px solid ${customColors.primaryPurple}1a`, pb: 2, mb: 5 }}>
-                    🎨 AI 도서 표지 생성 및 수정
-                </Typography>
+                <Box
+                    sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        mb: 5,
+                        borderBottom: `2px solid ${customColors.primaryPurple}1a`,
+                        pb: 2
+                    }}
+                >
+                    <Typography
+                        variant="h4"
+                        component="h1"
+                        sx={{
+                            color: 'text.primary',
+                            fontWeight: 'extrabold',
+                        }}
+                    >
+                        🎨 AI 도서 표지 생성 및 수정
+                    </Typography>
+
+                    <Button
+                        variant="contained"
+                        onClick={() => navigate('/')}
+                        sx={{
+                            bgcolor: customColors.bannerBlue,
+                            "&:hover": { bgcolor: "#064f6a" },
+                            color: "white",
+                            textTransform: "none"
+                        }}
+                    >
+                        홈
+                    </Button>
+                </Box>
 
                 <Grid container spacing={{xs: 4, sm: 6, lg: 8}} alignItems={"flex-start"}>
                     <Grid item xs={12} sm={5}>
@@ -212,7 +246,7 @@ const NewBookCoverPage = () => {
 
                         <Paper elevation={6} sx={{ p: 3, borderRadius: '12px', bgcolor: 'white', border: `1px solid ${customColors.infoIndigo}1a`, height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                             <Box sx={{ width: '100%', maxWidth: '220px', aspectRatio: '2 / 3', mb: 3, boxShadow: 8, borderRadius: '8px', overflow: 'hidden', border: `3px solid ${customColors.primaryPurple}` }}>
-                                <img src={MOCK_COVER_URL} alt="Current Book Cover" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/300x450/cccccc/000000?text=Image+Error" }} />
+                                <img src={generatedImageUrl ? generatedImageUrl:MOCK_COVER_URL} alt="Current Book Cover" style={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/300x450/cccccc/000000?text=Image+Error" }} />
                             </Box>
 
                             <Typography variant="h5" component="h3" sx={{ fontWeight: 'extrabold', textAlign: 'center', color: 'text.primary', mb: 1, px: 1, fontSize: { xs: '1.1rem', sm: '1.25rem' } }}>
@@ -272,14 +306,6 @@ const NewBookCoverPage = () => {
 
             {generatedImageUrl && (
                 <Paper elevation={4} sx={{ mt: 5, p: 3, borderRadius: '12px', textAlign: 'center', border: '1px solid #E5E7EB' }}>
-                    <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>✅ 생성된 표지 이미지</Typography>
-
-                    <Box sx={{ maxWidth: 300, mx: 'auto', aspectRatio: '2 / 3', mb: 3, borderRadius: '8px', overflow: 'hidden', boxShadow: 5 }}>
-                        <img src={generatedImageUrl} alt="Generated Cover" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    </Box>
-
-                    <TextField fullWidth value={generatedImageUrl} size="small" label="이미지 URL" InputProps={{ readOnly: true }} sx={{ mb: 2 }} />
-
                     <Button fullWidth variant="contained" color="success" startIcon={isRegistering ? <CircularProgress size={20} color="inherit" /> : <CheckCircleIcon />} onClick={handleRegisterCover} disabled={isRegistering || !numericBookId} sx={{ py: 1.5, borderRadius: '8px', fontWeight: 'bold' }}>
                         {isRegistering ? '등록 중...' : '도서 표지로 등록하기'}
                     </Button>
