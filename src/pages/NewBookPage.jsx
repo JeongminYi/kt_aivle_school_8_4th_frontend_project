@@ -112,14 +112,14 @@ export default function NewBookPageMUI() {
         <Container
             maxWidth={false}
             sx={{
-                width: "1100px",
+                width: "1500px",
                 mx: "auto",
                 py: { xs: 3, md: 5 }
             }}
         >
             {/* Banner */}
             <Paper
-                elevation={3}
+                elevation={4}
                 sx={{
                     bgcolor: customColors.bannerBlue,
                     color: "common.white",
@@ -164,27 +164,28 @@ export default function NewBookPageMUI() {
                 elevation={4}
                 sx={{
                     border: `2px solid ${customColors.bannerBlue}`,
-                    p: { xs: 2, md: 4 }
+                    p: { xs: 3, md: 5 }
                 }}
             >
-                <Grid container spacing={5} alignItems="start">
+                <Grid container spacing={10} alignItems="start">
                     {/* Left: Image preview */}
                     <Grid item xs={12} md={3}>
                         <Box
                             sx={{
                                 width: "100%",
-                                aspectRatio: { xs: "1 / 1", md: "2 / 3" },
-                                minHeight: 220,
+                                aspectRatio: { xs: "2 / 3", md: "3 / 4" },
+                                minHeight: 250,
                                 bgcolor: coverPreview ? "transparent" : customColors.bannerBlue,
                                 color: coverPreview ? "inherit" : "white",
-                                borderRadius: 1,
+                                borderRadius: 2,
                                 display: "flex",
                                 flexDirection: "column",
                                 alignItems: "center",
+                                position: "relative",
                                 justifyContent: "center",
                                 overflow: "hidden",
-                                p: 1,
-                                boxShadow: 3
+                                p: 2,
+                                boxShadow: 5
                             }}
                         >
                             {coverPreview ? (
@@ -193,6 +194,7 @@ export default function NewBookPageMUI() {
                                     src={coverPreview}
                                     alt="cover preview"
                                     sx={{
+                                        position: "absolute",
                                         width: "100%",
                                         height: "100%",
                                         objectFit: "cover",
