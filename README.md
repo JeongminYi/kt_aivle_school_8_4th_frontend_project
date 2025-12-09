@@ -2,8 +2,8 @@
 
 React + Vite 기반의 프론트엔드 프로젝트입니다.  
 백엔드(Spring Boot)와 연동되며 REST API 요청 및 UI를 제공합니다.  
-백엔드 README   
-'https://github.com/nsg716/kt_aivle_school_8_4th_backend_project/blob/master/README.md' 
+[![Backend](https://img.shields.io/badge/Backend-Readme.md-orange)](https://github.com/nsg716/kt_aivle_school_8_4th_backend_project/blob/master/README.md)
+ 
 ---
 
 ## 👥 Team Structure
