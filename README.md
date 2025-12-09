@@ -1,69 +1,137 @@
-## 📌 KT AIVLE School 8기 4차 미니프로젝트 – Backend
+# 📌 KT AIVLE School 8기 4차 미니프로젝트 – Backend
 
-  React + vite 기반 프론트엔드 프로젝트입니다.<br>
-  백엔드(Spring Boot)와 연동되며, REST API를 요청하고 유저 인터페이스를 제공하는 역할을 수행합니다.
+React + Vite 기반의 프론트엔드 프로젝트입니다.  
+백엔드(Spring Boot)와 연동되며 REST API 요청 및 UI를 제공합니다.
+
+---
 
 ## 👥 Team Structure
 
-  PM : 조유송 <br>
-  Backend : 나도요, 나성곤, 정성호<br>
-  Frontend : 이정민, 이동규, 조유송<br>
+**PM**  
+- 조유송
 
-## Skills
-<br>
-    React<br>
-    Vite<br>
-    Fetch<br>
-    axios<br>
-    
+**Backend**  
+- 나도요  
+- 나성곤  
+- 정성호  
 
+**Frontend**  
+- 이정민  
+- 이동규  
+- 조유송  
 
-## Project Structure 
-  components.book.BookCard - 메인 카드 목록 기술 - 사용X<br>
-  components.book.ui.Test - 서버 연결 상태 확인 - 테스트 용<br>
-  <br>
-  pagesㅡㅡBDPage - 상세 페이지 (요청 : axios , UI : CSS)<br>
-        |ㅡ MainPage - 메인 페이지 (요청 : axios, UI : CSS)<br>
-        |ㅡ NewBookCoverPage - AI 이미지 생성 페이지 (요청 : fetch , UI : MUI)<br>
-        |ㅡ NewBookPage - 새로운 책 등록 페이지 (요청 : fetch , UI : MUI)<br>
-        ㄴ  RevisePage - 기존 책 수정 페이지 (요청 : axios , UI : MUI)<br>
-  App - 페이지 경로 설정 <br>
-    <br><br>
+---
 
-## Start <br>
-  1. backEnd Server 생성 > `https://github.com/nsg716/kt_aivle_school_8_4th_backend_project` ->bootWar 빌드 ->java -jar (servername).war <br>
+## 🛠 Skills
 
-  2. front 파일중 public, src, eslint.config.js, index.html, package.json, package-lock.json, vite.config.js 파일 복제 후 새 폴더에 생성 <br>
+- React  
+- Vite  
+- Fetch API  
+- Axios  
+- CSS  
+- MUI(Material UI)
 
-  3. 폴더 위치에서 CMD 명령어로 1. npm install 2. npm run build 수행 <br>
+---
 
-  4. 폴더 위치에서 npm run preview <br>
+## 📁 Project Structure
   
+    src
+    ├─ components
+    │ └─ book
+    │     ├─ BookCard # 메인 카드 목록 (현재 사용 X)
+    │ └─ ui
+    │     └─ Test # 서버 연결 상태 테스트용
+    │
+    ├─ pages
+    │ ├─ BDPage # 상세 페이지 (axios, CSS UI)
+    │ ├─ MainPage # 메인 페이지 (axios, CSS UI)
+    │ ├─ NewBookCoverPage # AI 이미지 생성 (fetch, MUI UI)
+    │ ├─ NewBookPage # 새 책 등록 (fetch, MUI UI)
+    │ └─ RevisePage # 기존 책 수정 (axios, MUI UI)
+    │
+    └─ App.jsx # 라우팅 설정
 
 
-## Project Requirements
-  페이지 경로 설정 : App.jsx에 명시 <br>
-      import {Route, Routes} from "react-router-dom";<br>
-      import MainPage from "./pages/MainPage.jsx";<br>
-      ...<br>
-      <Routes><br>
-        {/* 메인 페이지 */}<br>
-        <Route path="/" element={<MainPage/>}/><br><br>
-  MUI 컴포넌트 :  NewBookCoverPage.jsx, NewBookPage.jsx, RevisePage.jsx 에서 사용<br><br>
-  fetch 요청 : NewBookCoverPage.jsx, NewBookPage.jsx 에서 적용<br><br>
+---
+
+## 🚀 Start Guide
+
+1. **백엔드 서버 실행**  
+   - Backend Repository:  
+     https://github.com/nsg716/kt_aivle_school_8_4th_backend_project  
+   - bootWar 빌드 후 실행  
+     ```
+     java -jar yourServer.war
+     ```
+
+2. **프론트엔드 파일 복사**  
+   `public`, `src`, `eslint.config.js`, `index.html`,  
+   `package.json`, `package-lock.json`, `vite.config.js`  
+   → 새 폴더에 복사
+
+3. **의존성 설치 & 빌드**
+   
+      npm install ->
+      npm run build ->
+      `npm run preview`
+
+
+
+---
+
+## 📌 Project Requirements
+
+### 📍 라우팅(App.jsx)
+    ```jsx
+    import {Route, Routes} from "react-router-dom";
+    import MainPage from "./pages/MainPage";
+    ...
+    <Routes>
+    <Route path="/" element={<MainPage />} />
+    ...
+    </Routes>
+
+
+📍 MUI 사용 페이지
+
+NewBookCoverPage.jsx
+
+NewBookPage.jsx
+
+RevisePage.jsx
+
+📍 fetch 사용 페이지
+
+NewBookCoverPage.jsx
+
+NewBookPage.jsx
+
+
+## 🌐 페이지별 주소
+
+기본 주소: **http://localhost:5173**
+
+| 주소 | 페이지 |
+|------|---------|
+| `/` | MainPage.jsx |
+| `/detail/{bookID}` | BDPage.jsx |
+| `/edit/{bookID}` | RevisePage.jsx |
+| `/register` | NewBookPage.jsx |
+| `/detail/{bookID}/updateCover` | NewBookCoverPage.jsx |
+
+
+🔧 차후 계획
+
+Backend
+
+  UserDTO 추가
+
+  Login / SignUp API 구현
+
+Frontend
   
-## 각 페이지별 주소 
-  기본 주소 : http://localhost:5173<br>
-  주소                         |    페이지<br>
-  ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ<br>
-  /                            |  MainPage.jsx<br>
-  /detail/{bookID}             |  BDPage.jsx<br>
-  /edit/{bookID}               |  RevisePage.jsx<br>
-  /register                    |  NewBookPage.jsx<br>
-  /detail/{bookID}/updateCover |  NewBookCoverPage.jsx<br>
-<br>
-## 차후 계획 
-
-  Back : UserDTO추가 및 Login, SigUp 요청 구현<br>
-  Front: 로그인, 회원가입 페이지 생성, 기존 메인화면에 내 작품보기 버튼 생성, 내 작품일 경우에만 수정가능<br>
+  로그인, 회원가입 페이지 생성
   
+  메인 화면에 “내 작품 보기” 버튼 추가
+  
+  본인 작품일 경우에만 수정 버튼 표시
