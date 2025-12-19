@@ -62,7 +62,7 @@ const NewBookCoverPage = () => {
     const {state} = useLocation();
     const navigate = useNavigate();
     // Try multiple sources for id: route param named 'bookId' or 'id', or location.state.id
-    const prompt_base = `상황: \n구도:`;
+    const prompt_base = `상황: `;
     const [apiKey, setApiKey] = useState('');
     const [selectedDalleVersion, setSelectedDalleVersion] = useState(dalleOptions[0].value);
     const [prompt, setPrompt] = useState(prompt_base);
@@ -111,7 +111,7 @@ const NewBookCoverPage = () => {
         setIsLoading(true);
         setMessageSeverity('info');
         setMessage(`[${selectedDalleVersion}] 모델로 표지 생성 중...`);
-
+        const prompt_base = `책 표지 이미지를 만드려고 해 책의 제목은 ${bookData.title}이고 내용은 ${bookData.content}이야 뒤의 요구사항에 맞게 이미지를 생성해줘`
         try {
             const response = await fetch('https://api.openai.com/v1/images/generations', {
                 method: 'POST',
@@ -121,7 +121,7 @@ const NewBookCoverPage = () => {
                 },
                 body: JSON.stringify({
                     model: selectedDalleVersion,
-                    prompt:prompt,
+                    prompt: prompt_base+prompt,
                     size: selectedDalleVersion === 'dall-e-3' ? '1024x1792' : '512x512',
                     quality: selectedDalleVersion === 'dall-e-3' ? 'standard' : undefined,
                     n: 1,
@@ -162,7 +162,7 @@ const NewBookCoverPage = () => {
         setMessage('표지 이미지 등록 중...');
 
         try {
-            const response = await fetch(`http://localhost:8080/api/books/${bookData.bookId}/cover`, {
+            const response = await fetch(`$BACKEND_APP_URL/books/${bookData.bookId}/cover`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ coverImageUrl: generatedImageUrl }),

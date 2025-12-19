@@ -55,7 +55,7 @@ export default function RevisePage() {
                 }
                 // 없으면 API에서 다시 가져오기
                 else if (id) {
-                    const response = await axios.get(`http://localhost:8080/api/books/${id}`);
+                    const response = await axios.get(`$BACKEND_APP_URL/books/${id}`);
                     const data = response.data;
                     setTitle(data.title || "");
                     setContent(data.content || "");
@@ -88,7 +88,7 @@ export default function RevisePage() {
     };
     const handleSubmit = async () => {
         try {
-            await axios.put(`http://localhost:8080/api/books/${id}`, {
+            await axios.put(`$BACKEND_APP_URL/books/${id}`, {
                 title:title,
                 content:content,
                 coverImageUrl:ImageURL

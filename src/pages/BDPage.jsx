@@ -21,7 +21,7 @@ export default function BDPage() {
         const fetchBookDetail = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get(`http://localhost:8080/api/books/${id}`);
+                const response = await axios.get(`$BACKEND_APP_URL/books/${id}`);
                 setItem(response.data);
             } catch (err) {
                 console.error(err);
