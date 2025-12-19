@@ -2,19 +2,19 @@ version: 0.2
 
 cache:
   paths:
-    - 'node_modules/**/*'
-
+    - node_modules/**/*
 phases:
   install:
     commands:
       - npm install
   build:
     commands:
-      - npm run build   # dist 폴더 생성
+      - npm run build
   post_build:
     commands:
       - aws s3 sync dist s3://$S3_BUCKET_NAME --delete
 
-
 artifacts:
-  files: [ ]
+  base-directory: dist
+  files:
+    - '**/*'
