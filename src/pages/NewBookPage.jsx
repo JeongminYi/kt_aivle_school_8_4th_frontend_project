@@ -42,7 +42,7 @@ export default function NewBookPageMUI() {
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState(null);
   const [messageSeverity, setMessageSeverity] = useState("info");
-  const [file_origin , setFile] = useState(null);
+
   // file preview handler (optional)
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
@@ -51,7 +51,7 @@ export default function NewBookPageMUI() {
     }
     const previewUrl = URL.createObjectURL(file);
     setCoverPreview(previewUrl);
-    setFile(file);
+
     // 추후 서버로 보낼 원본 파일 저장
 
   };
@@ -66,33 +66,16 @@ export default function NewBookPageMUI() {
     setIsLoading(true);
     setMessage(null);
 
-
+    const requestBody = {
+      title: title.trim(),
+      content: content,
+      coverImageUrl: coverPreview
+      // cover: coverPreview // 필요하면 포함
+    };
 
     try {
-        const bucketName = 'ai0917-image-uploads';
-        const region = 'ap-northeast-2';
-        const fileExtension = file_origin.name.split('.').pop(); // 확장자 추출
-        const uniqueFileName = `${crypto.randomUUID()}.${fileExtension}`; // UUID 사용 (또는 Date.now() + Math.random())
-        const s3Url = `https://${bucketName}.s3.${region}.amazonaws.com/${uniqueFileName}`;
-        console.log("S3 업로드 시작:", uniqueFileName);
-        const s3Response = await fetch(s3Url, {
-            method: 'PUT',
-            body: file_origin,
-            headers: {
-                'Content-Type': file_origin.type
-            }
-        });
-        if (!s3Response.ok) {
-            throw new Error(`S3 업로드 실패: ${await s3Response.text()}`);
-        }
-        console.log(coverPreview);
+      console.log(coverPreview)
 
-        const requestBody = {
-            title: title.trim(),
-            content: content,
-            coverImageUrl: s3Url
-            // cover: coverPreview // 필요하면 포함
-        };
       const response = await fetch("/api/books", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
