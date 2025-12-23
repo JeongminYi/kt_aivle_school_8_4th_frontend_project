@@ -105,6 +105,7 @@ export default function MainPage() {
                     </span>
           ))}
         </div>
+          <div>version0.0.1</div>
       </div>
   );
 }
