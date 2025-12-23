@@ -170,7 +170,7 @@ const NewBookCoverPage = () => {
     setMessage('표지 이미지 등록 중...');
 
     try {
-      const response = await fetch(`api/books/${bookData.bookId}/cover`, {
+      const response = await fetch(`/api/books/${bookData.bookId}/cover`, {
         method: 'PATCH',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({coverImageUrl: generatedImageUrl}),

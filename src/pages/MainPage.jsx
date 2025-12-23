@@ -17,7 +17,7 @@ export default function MainPage() {
         setLoading(true);
 
         // 1) 백엔드 데이터
-        const response = await axios.get("api/books");
+        const response = await axios.get("/api/books");
         const serverItems = response.data;
 
         // 2) localStorage 데이터
